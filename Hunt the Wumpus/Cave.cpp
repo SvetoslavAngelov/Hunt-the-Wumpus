@@ -22,7 +22,8 @@ Cave::Cave()
 
 	std::cout << "Dungeon with size " << dungeon_size << " created!\n";
 
-	// TODO print out debug dungeon layout
+	for (int i{ 0 }; i < dungeon_size; ++i)
+		std::cout << *rooms[i];
 
 }
 
@@ -88,19 +89,19 @@ void Cave::link_rooms(int dungeon_size)
 	// Linking second half of rooms
 	for (int i{ half }; i < dungeon_size; ++i)
 	{
-		if (i == 0)
-		{
-			rooms[i]->set_prev(rooms[half - 1]);
-			rooms[i]->set_next(rooms[i + 1]);
-			rooms[i]->set_adj(rooms[i + half]);
-		}
+			const Room* adj = rooms[i - half];
+			rooms[i]->set_prev(adj->get_prev());
+			rooms[i]->set_next(adj->get_next());
+			rooms[i]->set_adj(adj);
 	}
 }
 
 Cave::~Cave()
 {
-	for (size_t i{ 0 }; i < rooms.size(); ++i)
-		delete rooms[i];
+	/*for (std::vector<Room*>::iterator it = rooms.begin(); it != rooms.end(); ++it)
+	{
+		delete *it;
+	}*/
 
 	std::cout << "Dungeon destroyed!\n";
 }

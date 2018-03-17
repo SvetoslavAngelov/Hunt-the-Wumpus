@@ -58,7 +58,22 @@ void Room::set_hazard(Hazard h)
 	hazard = h;
 }
 
+const Room* Room::get_prev() const
+{
+	return prev; 
+}
+const Room* Room::get_next() const
+{
+	return next;
+}
+
 int Room::room_index() const
 {
 	return index;
+}
+
+std::ostream& operator<<(std::ostream& os, const Room& r)
+{
+	os << "Current " << r.index << " previous " << r.prev->index << " next " << r.next->index << " adjacent " << r.adj->index << '\n';
+	return os;
 }
