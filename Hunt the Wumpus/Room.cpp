@@ -1,15 +1,11 @@
 #include "stdafx.h"
 #include "Room.h"
 
-Room::Room() {}
 
-Room::Room(int index)
-	: index{ index }, hazard{ Hazard::None }, prev{ nullptr }, next{ nullptr }, adj{ nullptr } {}
+Room::Room(int n)
+	: index{ n }, hazard{ Room::Hazard::None }, prev{ nullptr }, next{ nullptr }, adj{ nullptr } {}
 
-Room::Room(int index, Hazard hazard)
-	: index{ index }, hazard{ hazard }, prev{ nullptr }, next{ nullptr }, adj{ nullptr } {}
-
-Room::Room(int index, Hazard hazard, const Room* prev, const Room* next, const Room* adj)
+Room::Room(int index, Hazard hazard = Room::Hazard::None, Room* prev = nullptr, Room* next = nullptr, Room* adj = nullptr)
 	: index{ index }, hazard{ hazard }, prev{ prev }, next{ next }, adj{ adj } {}
 
 Room::Room(const Room& r)
@@ -31,49 +27,76 @@ Room& Room::operator=(const Room& r)
 	return *this;
 }
 
+Room* Room::add_room(Room* n)
+{
+	if (n == nullptr) return this; 
+
+	next = n;
+	n->prev = this; 
+	
+	return this; 
+}
+
+Room* Room::add_room_vertical(Room* a)
+{
+	if (a == nullptr) return this; 
+
+	adj = a; 
+	a->adj = this; 
+
+	return this; 
+}
+
 Room::~Room()
 {
-	delete prev;
-	delete next;
-	delete adj;
-}
+	if (prev != nullptr && prev->next != nullptr)
+	{
+		prev->next = nullptr;
+		prev = nullptr;
+		delete prev;
+	}
+	else delete prev;
 
-void Room::set_prev(const Room* r)
-{
-	prev = r;
-}
+	if (next != nullptr && next->prev != nullptr)
+	{
+		next->prev = nullptr;
+		next = nullptr;
+		delete next;
+	}
+	else delete prev;
 
-void Room::set_next(const Room* r)
-{
-	next = r;
-}
-
-void Room::set_adj(const Room* r)
-{
-	adj = r;
-}
-
-void Room::set_hazard(Hazard h)
-{
-	hazard = h;
-}
-
-const Room* Room::get_prev() const
-{
-	return prev; 
-}
-const Room* Room::get_next() const
-{
-	return next;
-}
-
-int Room::room_index() const
-{
-	return index;
+	if (adj != nullptr && adj != nullptr)
+	{
+		adj->adj = nullptr;
+		adj = nullptr;
+		delete adj;
+	}
+	else delete adj;
 }
 
 std::ostream& operator<<(std::ostream& os, const Room& r)
 {
-	os << "Current " << r.index << " previous " << r.prev->index << " next " << r.next->index << " adjacent " << r.adj->index << '\n';
+	os << "Current " << r.index << " previous " << r.prev->index << " next " 
+		<< r.next->index << " adjacent " << r.adj->index << " with " << r.hazard << '\n';
 	return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const Room::Hazard& h)
+{
+	switch (h)
+	{
+	case Room::Hazard::None :
+		os << "no hazard";
+		break;
+	case Room::Hazard::Abyss :
+		os << "abyss"; 
+		break;
+	case Room::Hazard::Bats :
+		os << "bats";
+		break;
+	default: 
+		os << "unknown hazard";
+		break;
+	}
+	return os; 
 }

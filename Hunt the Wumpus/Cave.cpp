@@ -2,6 +2,7 @@
 #include "Cave.h"
 #include "Room.h"
 #include <algorithm>
+#include <ctime>
 #include <iostream>
 
 Cave::Cave()
@@ -9,32 +10,33 @@ Cave::Cave()
 	constexpr int dungeon_size{ 20 }; // TODO add custom size rooms, current default room size set to 20
 
 	create_rooms(dungeon_size);
-
-	// Scramble rooms, so hazards when added are not associated with room numbers
+		
+	// Seed the random generator and scramble the room numbers in the sequence
+	std::srand(static_cast<int>(std::time(0)));
 	std::random_shuffle(rooms.begin(), rooms.end());
 
 	set_hazards(dungeon_size);
 
-	// Scramble rooms, so hazards are not associated with room posiiton 
+	// Scramble rooms again, so hazards are not associated with room posiiton 
 	std::random_shuffle(rooms.begin(), rooms.end());
 
 	link_rooms(dungeon_size);
 
+	debug_print();
+
 	std::cout << "Dungeon with size " << dungeon_size << " created!\n";
-
-	for (int i{ 0 }; i < dungeon_size; ++i)
-		std::cout << *rooms[i];
-
 }
 
-void Cave::create_rooms(int dungeon_size)
+void Cave::create_rooms(const int dungeon_size)
 {
-	// Room index to start from 1
+	// Room indeces to start from 1
 	for (int i{ 1 }; i < dungeon_size + 1; ++i)
-		rooms.push_back(new Room{ i });
+	{
+		rooms.push_back(new Room{i});
+	}
 }
 
-void Cave::set_hazards(int dungeon_size)
+void Cave::set_hazards(const int dungeon_size)
 {
 	for (int i{ 0 }; i < dungeon_size; ++i)
 	{
@@ -49,59 +51,44 @@ void Cave::set_hazards(int dungeon_size)
 	}
 }
 
-/**
-Links rooms as follows, assuming default dungeon size of 20 rooms:
-
-prev		   next
-9 <-> 0 <-> 1 <-> 2  ...  9 <-> 0
-|	  | adj |     |		  |		|
-19	  10	11    12 ...  19	10
-
-**/
-void Cave::link_rooms(int dungeon_size)
+/* Links rooms as follows, assuming a cave size of 20:
+prev			next
+20 <->  1   <-> 2  ...
+|		|adj	|
+10 <->  11  <-> 12 ... */
+void Cave::link_rooms(const int dungeon_size) 
 {
-	int half = dungeon_size / 2;
-
-	// Linking first half of rooms 
-	for (int i{ 0 }; i < half; ++i)
+	// Linking next and previous rooms first 
+	for (int i{ 0 }; i < dungeon_size; ++i)
 	{
-		if (i == 0)
+		if (i == dungeon_size - 1)
 		{
-			rooms[i]->set_prev(rooms[half - 1]);
-			rooms[i]->set_next(rooms[i + 1]);
-			rooms[i]->set_adj(rooms[i + half]);
-		}
-		else if (i == half - 1)
-		{
-			rooms[i]->set_prev(rooms[i - 1]);
-			rooms[i]->set_next(rooms[0]);
-			rooms[i]->set_adj(rooms[i + half]);
+			rooms[i]->add_room(rooms[0]);
 		}
 		else
 		{
-			rooms[i]->set_prev(rooms[i - 1]);
-			rooms[i]->set_next(rooms[i + 1]);
-			rooms[i]->set_adj(rooms[i + half]);
+			rooms[i]->add_room(rooms[i + 1]);
 		}
-
 	}
 
-	// Linking second half of rooms
-	for (int i{ half }; i < dungeon_size; ++i)
+	/* Linking the two halfs of the rooms sequence
+		Room 1 links to 11 and 2 to 12, etc, */
+	for (int i{ 0 }; i < dungeon_size / 2; ++i)
 	{
-			const Room* adj = rooms[i - half];
-			rooms[i]->set_prev(adj->get_prev());
-			rooms[i]->set_next(adj->get_next());
-			rooms[i]->set_adj(adj);
+		rooms[i]->add_room_vertical(rooms[i + (dungeon_size / 2)]);
 	}
+}
+
+void Cave::debug_print()
+{
+	for (std::vector<Room*>::iterator it = rooms.begin(); it != rooms.end(); ++it)
+		std::cout << **it; 
 }
 
 Cave::~Cave()
 {
-	/*for (std::vector<Room*>::iterator it = rooms.begin(); it != rooms.end(); ++it)
-	{
-		delete *it;
-	}*/
+	for (std::vector<Room*>::iterator it = rooms.begin(); it != rooms.end(); ++it)
+		delete *it; 
 
 	std::cout << "Dungeon destroyed!\n";
 }

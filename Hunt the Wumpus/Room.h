@@ -7,35 +7,30 @@ public:
 	enum class Hazard {
 		None = 0, Bats, Abyss
 	};
-
-	Room();
+	
 	explicit Room(int);
-	Room(int, Hazard);
-	Room(int, Hazard, const Room*, const Room*, const Room*);
+	Room(int, Hazard, Room*, Room*, Room*);
 
-	Room(const Room&);
+	const Room(const Room&);
 	Room& operator=(const Room&);
 
-	~Room();
+	Room* add_room(Room*);
+	Room* add_room_vertical(Room*);
 
-	void set_prev(const Room*);
-	void set_next(const Room*);
-	void set_adj(const Room*);
-	void set_hazard(Hazard);
-
-	//TODO rewrite, too many getters and setters 
-	const Room* get_prev() const;
-	const Room* get_next() const;
-	int room_index() const;
+	inline void set_index(const int n) { index = n; }
+	inline void set_hazard(Hazard h) { hazard = h; }
+	
+	~Room(); 
 
 	friend std::ostream& operator<<(std::ostream&, const Room&);
+	friend std::ostream& operator<<(std::ostream&, const Hazard&);
 
 private:
 	int index;
 	Hazard hazard;
-	const Room* prev;
-	const Room* next;
-	const Room* adj;
+	Room* prev;
+	Room* next;
+	Room* adj;
 
 };
 
