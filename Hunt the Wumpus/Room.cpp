@@ -53,31 +53,29 @@ Room::~Room()
 	{
 		prev->next = nullptr;
 		prev = nullptr;
-		delete prev;
 	}
-	else delete prev;
-
+	
 	if (next != nullptr && next->prev != nullptr)
 	{
 		next->prev = nullptr;
 		next = nullptr;
-		delete next;
 	}
-	else delete prev;
-
+	
 	if (adj != nullptr && adj != nullptr)
 	{
 		adj->adj = nullptr;
 		adj = nullptr;
-		delete adj;
 	}
-	else delete adj;
+	
+	delete prev;
+	delete prev;
+	delete adj;
 }
 
 std::ostream& operator<<(std::ostream& os, const Room& r)
 {
-	os << "Current " << r.index << " previous " << r.prev->index << " next " 
-		<< r.next->index << " adjacent " << r.adj->index << " with " << r.hazard << '\n';
+	os << "You are currently in room " << r.index << "; There are tunnels to rooms " << r.prev->index << " , " 
+		<< r.next->index << " and " << r.adj->index << ".\n";
 	return os;
 }
 

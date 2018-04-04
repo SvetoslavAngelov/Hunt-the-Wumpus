@@ -2,6 +2,7 @@
 #include "Cave.h"
 #include "Room.h"
 #include <algorithm>
+#include <random>
 #include <ctime>
 #include <iostream>
 
@@ -22,14 +23,67 @@ Cave::Cave()
 
 	link_rooms(dungeon_size);
 
-	debug_print();
+	//debug_print();
 
 	std::cout << "Dungeon with size " << dungeon_size << " created!\n";
 }
 
+int Cave::set_player_location()
+{
+	int player_location{ 0 };
+
+	for (std::vector<Room*>::const_iterator cit = rooms.begin(); cit != rooms.end(); ++cit)
+	{
+		if ((*cit)->get_hazard() == Room::Hazard::None)
+		{
+			player_location = (*cit)->get_index();
+			break;
+		}
+	}
+	return player_location;
+}
+
+int Cave::set_wumpus_location(const int player_location)
+{
+	int wumpus_location{ 0 };
+
+	auto randint = [](int min, int max)->int
+	{
+		static std::default_random_engine ran;
+		return std::uniform_int_distribution<>{min, max}(ran);
+	};
+
+	// TODO remove when custom size dungeons are added
+	int dungeon_size = static_cast<int>(rooms.size());
+	
+	// Find a random number between the player's location and the cave size
+	int temp_location = randint(player_location, dungeon_size);
+
+	if (player_location != temp_location) 
+		wumpus_location = temp_location;
+	else if (player_location == temp_location && player_location == dungeon_size)
+		wumpus_location = temp_location - 1; 
+	else 
+		wumpus_location = temp_location + 1; 
+
+	return wumpus_location;
+}
+
+const Room* Cave::room_index(const int index) const 
+{
+	const Room* room = rooms[0];
+
+	for (std::vector<Room*>::const_iterator cit = rooms.begin(); cit != rooms.end(); ++cit)
+	{
+		if (index == (*cit)->get_index())
+			room = *cit; 
+	}
+
+	return room; 
+}
+
 void Cave::create_rooms(const int dungeon_size)
 {
-	// Room indeces to start from 1
 	for (int i{ 1 }; i < dungeon_size + 1; ++i)
 	{
 		rooms.push_back(new Room{i});
@@ -71,7 +125,7 @@ void Cave::link_rooms(const int dungeon_size)
 		}
 	}
 
-	/* Linking the two halfs of the rooms sequence
+	/* Linking the two halfs together
 		Room 1 links to 11 and 2 to 12, etc, */
 	for (int i{ 0 }; i < dungeon_size / 2; ++i)
 	{
@@ -81,8 +135,8 @@ void Cave::link_rooms(const int dungeon_size)
 
 void Cave::debug_print()
 {
-	for (std::vector<Room*>::iterator it = rooms.begin(); it != rooms.end(); ++it)
-		std::cout << **it; 
+	for (std::vector<Room*>::const_iterator cit = rooms.begin(); cit != rooms.end(); ++cit)
+		std::cout << **cit; 
 }
 
 Cave::~Cave()

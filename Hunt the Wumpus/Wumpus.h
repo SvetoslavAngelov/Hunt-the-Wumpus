@@ -5,17 +5,19 @@
 class Wumpus : public Actor
 {
 public:
-	explicit Wumpus(int position);
+	Wumpus();
 	~Wumpus();
 
-	void move_to(int) override;
-	int get_position() const override;
+	inline void move_to(const int new_position) override { position = new_position; }
+	inline void kill() override { state = false; }
+	inline bool is_alive() const override { return state; }
+	inline int get_position() const override { return position; }
 
 	// TODO output Monster state, i.e. has it moved? 
 
 private:
 	int position;
 	std::string name;
-
+	bool state; 
 };
 

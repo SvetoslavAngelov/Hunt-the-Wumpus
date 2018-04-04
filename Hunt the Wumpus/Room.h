@@ -11,7 +11,7 @@ public:
 	explicit Room(int);
 	Room(int, Hazard, Room*, Room*, Room*);
 
-	const Room(const Room&);
+	Room(const Room&);
 	Room& operator=(const Room&);
 
 	Room* add_room(Room*);
@@ -19,6 +19,9 @@ public:
 
 	inline void set_index(const int n) { index = n; }
 	inline void set_hazard(Hazard h) { hazard = h; }
+	inline int get_index() const { return index; }
+	inline Hazard get_hazard() const { return hazard;  }
+	inline const Room* get_next() const { return next; }
 	
 	~Room(); 
 
