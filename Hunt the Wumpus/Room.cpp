@@ -49,27 +49,7 @@ Room* Room::add_room_vertical(Room* a)
 
 Room::~Room()
 {
-	if (prev != nullptr && prev->next != nullptr)
-	{
-		prev->next = nullptr;
-		prev = nullptr;
-	}
-	
-	if (next != nullptr && next->prev != nullptr)
-	{
-		next->prev = nullptr;
-		next = nullptr;
-	}
-	
-	if (adj != nullptr && adj != nullptr)
-	{
-		adj->adj = nullptr;
-		adj = nullptr;
-	}
-	
-	delete prev;
-	delete prev;
-	delete adj;
+
 }
 
 std::ostream& operator<<(std::ostream& os, const Room& r)
@@ -77,24 +57,4 @@ std::ostream& operator<<(std::ostream& os, const Room& r)
 	os << "You are currently in room " << r.index << "; There are tunnels to rooms " << r.prev->index << " , " 
 		<< r.next->index << " and " << r.adj->index << ".\n";
 	return os;
-}
-
-std::ostream& operator<<(std::ostream& os, const Room::Hazard& h)
-{
-	switch (h)
-	{
-	case Room::Hazard::None :
-		os << "no hazard";
-		break;
-	case Room::Hazard::Abyss :
-		os << "abyss"; 
-		break;
-	case Room::Hazard::Bats :
-		os << "bats";
-		break;
-	default: 
-		os << "unknown hazard";
-		break;
-	}
-	return os; 
 }

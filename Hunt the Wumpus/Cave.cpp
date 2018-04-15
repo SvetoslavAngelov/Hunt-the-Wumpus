@@ -1,31 +1,23 @@
 #include "stdafx.h"
 #include "Cave.h"
 #include "Room.h"
-#include <algorithm>
 #include <random>
 #include <ctime>
-#include <iostream>
 
 Cave::Cave()
 {
 	constexpr int dungeon_size{ 20 }; // TODO add custom size rooms, current default room size set to 20
 
 	create_rooms(dungeon_size);
-		
-	// Seed the random generator and scramble the room numbers in the sequence
+
 	std::srand(static_cast<int>(std::time(0)));
 	std::random_shuffle(rooms.begin(), rooms.end());
 
 	set_hazards(dungeon_size);
 
-	// Scramble rooms again, so hazards are not associated with room posiiton 
 	std::random_shuffle(rooms.begin(), rooms.end());
 
 	link_rooms(dungeon_size);
-
-	//debug_print();
-
-	std::cout << "Dungeon with size " << dungeon_size << " created!\n";
 }
 
 int Cave::set_player_location()
@@ -43,7 +35,7 @@ int Cave::set_player_location()
 	return player_location;
 }
 
-int Cave::set_wumpus_location(const int player_location)
+int Cave::set_random_location(const int player_location)
 {
 	int wumpus_location{ 0 };
 
@@ -69,7 +61,7 @@ int Cave::set_wumpus_location(const int player_location)
 	return wumpus_location;
 }
 
-const Room* Cave::room_index(const int index) const 
+const Room* Cave::get_room_at(const int index) const 
 {
 	const Room* room = rooms[0];
 
@@ -80,6 +72,12 @@ const Room* Cave::room_index(const int index) const
 	}
 
 	return room; 
+}
+
+Cave::~Cave()
+{
+	for (std::vector<Room*>::iterator it = rooms.begin(); it != rooms.end(); ++it)
+		delete *it;
 }
 
 void Cave::create_rooms(const int dungeon_size)
@@ -105,11 +103,6 @@ void Cave::set_hazards(const int dungeon_size)
 	}
 }
 
-/* Links rooms as follows, assuming a cave size of 20:
-prev			next
-20 <->  1   <-> 2  ...
-|		|adj	|
-10 <->  11  <-> 12 ... */
 void Cave::link_rooms(const int dungeon_size) 
 {
 	// Linking next and previous rooms first 
@@ -126,23 +119,10 @@ void Cave::link_rooms(const int dungeon_size)
 	}
 
 	/* Linking the two halfs together
-		Room 1 links to 11 and 2 to 12, etc, */
+	 * Room 1 links to 11 and 2 to 12... */
 	for (int i{ 0 }; i < dungeon_size / 2; ++i)
 	{
 		rooms[i]->add_room_vertical(rooms[i + (dungeon_size / 2)]);
 	}
 }
 
-void Cave::debug_print()
-{
-	for (std::vector<Room*>::const_iterator cit = rooms.begin(); cit != rooms.end(); ++cit)
-		std::cout << **cit; 
-}
-
-Cave::~Cave()
-{
-	for (std::vector<Room*>::iterator it = rooms.begin(); it != rooms.end(); ++it)
-		delete *it; 
-
-	std::cout << "Dungeon destroyed!\n";
-}

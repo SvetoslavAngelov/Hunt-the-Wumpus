@@ -2,12 +2,11 @@
 #include "Wumpus.h"
 #include <iostream>
 
-Wumpus::Wumpus() : position{ 0 }, name{ "Wumpus" }, state{ true }
+Wumpus::Wumpus() : alive{ true }, position { 0 }, name{ "Wumpus" }
 {
-	std::cout << "Wumpus spawned in the level!\n";
+	std::cout << "Wumpus roams the cave!\n";
 }
 
 Wumpus::~Wumpus()
 {
-	std::cout << "Wumpus slain!\n";
 }

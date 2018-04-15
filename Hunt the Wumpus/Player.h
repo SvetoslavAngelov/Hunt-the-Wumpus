@@ -5,19 +5,27 @@
 class Player : public Actor
 {
 public:
+	/*Constructor*/
 	explicit Player(const std::string& name);
+
+	/*Destructor*/
 	~Player();
 	
-	
-	inline void kill() override { state = false; }
-	inline bool is_alive() const override { return state; }
-	inline int get_position() const override { return position; }
-	inline void move_to(const int room_number) override { position = room_number; }// TODO
-	
-	void shoot_at(const int room_number, const class Cave* cave, class Wumpus* wumpus) const;
+	/*Sets the player's state to "dead"*/
+	inline void kill() override { alive = false; }
 
+	/*Returns the player's current state, dead or alive*/
+	inline bool is_alive() const override{ return alive; }
+
+	/*Returns the room number the player is currently in*/
+	inline int get_position() const override { return position; }
+
+	/*Moves the player to the chosen location*/
+	inline void move_to(const int room_number) override { position = room_number; }
+	
 private:
+	bool alive;
 	int position;
 	std::string name;
-	bool state; 
+
 };
