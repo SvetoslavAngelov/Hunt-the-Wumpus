@@ -4,20 +4,18 @@
 #include <random>
 #include <ctime>
 
-Cave::Cave()
+Cave::Cave() : dungeon_size{20}
 {
-	constexpr int dungeon_size{ 20 }; // TODO add custom size rooms, current default room size set to 20
-
-	create_rooms(dungeon_size);
+	create_rooms();
 
 	std::srand(static_cast<int>(std::time(0)));
 	std::random_shuffle(rooms.begin(), rooms.end());
 
-	set_hazards(dungeon_size);
+	set_hazards();
 
 	std::random_shuffle(rooms.begin(), rooms.end());
 
-	link_rooms(dungeon_size);
+	link_rooms();
 }
 
 int Cave::set_player_location()
@@ -44,9 +42,6 @@ int Cave::set_random_location(const int player_location)
 		static std::default_random_engine ran;
 		return std::uniform_int_distribution<>{min, max}(ran);
 	};
-
-	// TODO remove when custom size dungeons are added
-	int dungeon_size = static_cast<int>(rooms.size());
 	
 	// Find a random number between the player's location and the cave size
 	int temp_location = randint(player_location, dungeon_size);
@@ -80,7 +75,7 @@ Cave::~Cave()
 		delete *it;
 }
 
-void Cave::create_rooms(const int dungeon_size)
+void Cave::create_rooms()
 {
 	for (int i{ 1 }; i < dungeon_size + 1; ++i)
 	{
@@ -88,7 +83,7 @@ void Cave::create_rooms(const int dungeon_size)
 	}
 }
 
-void Cave::set_hazards(const int dungeon_size)
+void Cave::set_hazards()
 {
 	for (int i{ 0 }; i < dungeon_size; ++i)
 	{
@@ -103,7 +98,7 @@ void Cave::set_hazards(const int dungeon_size)
 	}
 }
 
-void Cave::link_rooms(const int dungeon_size) 
+void Cave::link_rooms() 
 {
 	// Linking next and previous rooms first 
 	for (int i{ 0 }; i < dungeon_size; ++i)

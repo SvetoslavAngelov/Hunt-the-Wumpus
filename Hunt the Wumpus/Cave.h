@@ -26,21 +26,22 @@ public:
 	
 private:
 	/*Creates an array of rooms with room numbers from 1 to 20*/
-	void create_rooms(const int);
+	void create_rooms();
 
 	/*Sets a hazard for each room in the array 
 	 *50% of rooms with no hazard, 25% with bats and 25% with abyss*/
-	void set_hazards(const int);
+	void set_hazards();
 
 	/*Links rooms together in the array, such that:
 	 *prev			next
 	 *20 <->  1   <-> 2  ...
      *|	      |adj    |
      *10 <->  11  <-> 12 ...*/
-	void link_rooms(const int);
+	void link_rooms();
 
 	/*Member types*/
 	std::vector <class Room*> rooms;
+	const int dungeon_size;
 
 };
 

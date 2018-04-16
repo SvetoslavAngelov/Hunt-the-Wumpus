@@ -118,6 +118,7 @@ void Game::update_wumpus_state()
 	else if (arrow.fired && wumpus->is_alive())
 	{
 		wumpus->move_to(cave->set_random_location(player->get_position())); // TODO replace with a choice of three rooms 
+		arrow.fired = false;
 	}
 }
 
