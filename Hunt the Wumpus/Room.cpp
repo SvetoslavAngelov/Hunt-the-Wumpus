@@ -29,22 +29,26 @@ Room& Room::operator=(const Room& r)
 
 Room* Room::add_room(Room* n)
 {
-	if (n == nullptr) return this; 
-
-	next = n;
-	n->prev = this; 
+	if (n)
+	{
+		next = n;
+		n->prev = this;
+		return this;
+	}
 	
-	return this; 
+	return nullptr;
 }
 
 Room* Room::add_room_vertical(Room* a)
 {
-	if (a == nullptr) return this; 
+	if (a)
+	{
+		adj = a;
+		a->adj = this;
+		return this;
+	}
 
-	adj = a; 
-	a->adj = this; 
-
-	return this; 
+	return nullptr;
 }
 
 Room::~Room()

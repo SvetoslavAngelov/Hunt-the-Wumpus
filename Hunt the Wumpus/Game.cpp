@@ -16,9 +16,6 @@ Game::Game(const std::string& player_name)
 	arrow.target_location = 0;
 	arrow.fired = false;
 
-	player_is_alive = true; 
-	wumpus_is_alive = true;
-
 	int player_location = cave->set_player_location();
 	player->move_to(player_location);
 
