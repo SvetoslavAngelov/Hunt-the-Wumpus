@@ -34,7 +34,7 @@ void Game::run()
 	}
 }
 
-void Game::display_output()
+void Game::display_output() const
 {
 	const Room* room = cave->get_room_at(player->get_position());
 	int wumpus_position = wumpus->get_position();

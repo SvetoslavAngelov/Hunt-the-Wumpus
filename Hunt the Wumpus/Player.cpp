@@ -7,7 +7,3 @@ Player::Player(const std::string& name) : alive{ true }, position { 0 }, name{ n
 {
 	std::cout << "Welcome " << name << "!\n";
 }
-
-Player::~Player()
-{
-}

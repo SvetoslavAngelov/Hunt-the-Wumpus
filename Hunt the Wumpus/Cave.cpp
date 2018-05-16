@@ -22,7 +22,7 @@ int Cave::set_player_location()
 {
 	int player_location{ 0 };
 
-	for (std::vector<Room*>::const_iterator cit = rooms.begin(); cit != rooms.end(); ++cit)
+	for (auto cit = rooms.begin(); cit != rooms.end(); ++cit)
 	{
 		if ((*cit)->get_hazard() == Room::Hazard::None)
 		{
@@ -33,7 +33,7 @@ int Cave::set_player_location()
 	return player_location;
 }
 
-int Cave::set_random_location(const int player_location)
+int Cave::set_random_location(int player_location)
 {
 	int wumpus_location{ 0 };
 
@@ -56,11 +56,11 @@ int Cave::set_random_location(const int player_location)
 	return wumpus_location;
 }
 
-const Room* Cave::get_room_at(const int index) const 
+const Room* Cave::get_room_at(int index) const 
 {
 	const Room* room = rooms[0];
 
-	for (std::vector<Room*>::const_iterator cit = rooms.begin(); cit != rooms.end(); ++cit)
+	for (auto cit = rooms.begin(); cit != rooms.end(); ++cit)
 	{
 		if (index == (*cit)->get_index())
 			room = *cit; 
@@ -71,7 +71,7 @@ const Room* Cave::get_room_at(const int index) const
 
 Cave::~Cave()
 {
-	for (std::vector<Room*>::iterator it = rooms.begin(); it != rooms.end(); ++it)
+	for (auto it = rooms.begin(); it != rooms.end(); ++it)
 		delete *it;
 }
 
@@ -83,7 +83,7 @@ void Cave::create_rooms()
 	}
 }
 
-void Cave::set_hazards()
+void Cave::set_hazards() const
 {
 	for (int i{ 0 }; i < dungeon_size; ++i)
 	{
@@ -98,7 +98,7 @@ void Cave::set_hazards()
 	}
 }
 
-void Cave::link_rooms() 
+void Cave::link_rooms() const
 {
 	// Linking next and previous rooms first 
 	for (int i{ 0 }; i < dungeon_size; ++i)

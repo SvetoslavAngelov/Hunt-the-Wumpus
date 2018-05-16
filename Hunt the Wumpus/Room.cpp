@@ -51,11 +51,6 @@ Room* Room::add_room_vertical(Room* a)
 	return nullptr;
 }
 
-Room::~Room()
-{
-
-}
-
 std::ostream& operator<<(std::ostream& os, const Room& r)
 {
 	os << "You are currently in room " << r.index << "; There are tunnels to rooms " << r.prev->index << " , " 
