@@ -1,6 +1,5 @@
 # Hunt-the-Wumpus
 March 18th 2018
-Principles and Practice Using C++ Exercise 18.12
 
 This is a little project which implements a version of the text adventure game "Hunt the Wumpus", invented by Gregory Yob in 1975.
 This version of the game is based on exercise 18.12, from the book "Programming Principles and Practice Using C++" by Bjarne Stroustrup.
